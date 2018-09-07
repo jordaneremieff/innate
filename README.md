@@ -34,4 +34,17 @@ def typed_args(s: str, myint: int = 11):
     print(f"Arg s={s}, myint={myint}")
 ```
 
+```
+(venv) [erm@odin myapp]$ myapp
+usage: myapp [-h] {mycommand,print_string,test_default,test_annotation} ...
+
+Innate CLI
+
+positional arguments:
+  {mycommand,print_string,test_default,test_annotation}
+
+optional arguments:
+  -h, --help            show this help message and exit
+```
+
 Full example project in `example/`.
