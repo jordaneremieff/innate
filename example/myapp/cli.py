@@ -1,23 +1,46 @@
 from innate import Innate
 
-innate = Innate()
+innate = Innate(description="MyApp CLI")
 
 
-@innate("mycommand")
-def noargs():
-    print("Example command.")
+@innate()
+def hello_world():
+    """Print 'Hello World!' to the console."""
+    print("Hello world!")
 
 
-@innate("print_string")
-def singlearg(s):
-    print(f"Hello {s}")
+@innate("helloworld")
+def helloworld():
+    """Print 'Hello World!' to the console with a defined name."""
+    print("Hello world!")
 
 
-@innate("test_default")
-def test(s, mydefault="defaultval"):
-    print(f"Arg s={s}, mydefault={mydefault}")
+@innate()
+def hello(name):
+    """
+    Print Hello with a name argument.
+
+    myapp hello you
+    """
+    print(f"Hello, {name}")
 
 
-@innate("test_annotation")
-def typedargs(s: str, myint: int = 11):
-    print(f"Arg s={s}, myint={myint}")
+@innate()
+def add(x: int, y: int):
+    """
+    Enter two values to add. Must be integers.
+
+    myapp add 1 2
+    """
+    print(f"{x} + {y} = {x + y}")
+
+
+@innate()
+def add_x_or_100(x: int, y: int = 100):
+    """
+    Enter two values to add or a single value to add 100. Must be integers.
+
+    myapp add_x_or_100 1
+    myapp add_x_or_100 1 --y 1
+    """
+    print(f"{x} + {y} = {x + y}")

@@ -1,27 +1,38 @@
 import sys
 import argparse
-from inspect import signature
+import typing
+from inspect import signature, getdoc
+from innate.__version__ import __version__
 
 
 class Innate:
-    def __init__(self):
-        self.parser = argparse.ArgumentParser(description="Innate CLI")
+    def __init__(self, description: str = f"Innate CLI {__version__}") -> None:
+        self.description = description
+        self.parser = argparse.ArgumentParser(description=description)
         self.subparsers = self.parser.add_subparsers()
 
-    def __call__(self, name):
-        def decorator(func):
-            parser = self.subparsers.add_parser(name)
-            parser.set_defaults(func=func)
+    def __call__(self, name: str = None) -> typing.Callable:
+        def decorator(func: typing.Callable) -> typing.Callable:
+            parser_name = name or func.__name__
+            parser = self.subparsers.add_parser(parser_name, help=getdoc(func))
             sig = signature(func)
+            parser.set_defaults(func=func)
+
+            kwargs = {}
+
             for parameter in sig.parameters.values():
-                if parameter.default == parameter.empty:
-                    parser.add_argument(parameter.name, type=parameter.annotation)
+
+                if parameter.annotation is not parameter.empty:
+                    kwargs["type"] = parameter.annotation
+
+                if parameter.default is not parameter.empty:
+                    arg_name = f"--{parameter.name}"
+                    kwargs["default"] = parameter.default
                 else:
-                    parser.add_argument(
-                        f"--{parameter.name}",
-                        default=parameter.default,
-                        type=parameter.annotation,
-                    )
+                    arg_name = parameter.name
+
+                parser.add_argument(arg_name, **kwargs)
+
             return func
 
         return decorator

@@ -11,37 +11,68 @@ Small library for implementing command-line interfaces in Python 3.6+ projects.
 ```python
 from innate import Innate
 
-innate = Innate()
+innate = Innate(description="MyApp CLI")
 
 
-@innate("mycommand")
-def noargs():
-    print("Example command.")
+@innate()
+def hello(name):
+    """
+    Print Hello with a name argument.
+
+    myapp hello you
+    """
+    print(f"Hello, {name}")
 
 
-@innate("print_string")
-def singlearg(s):
-    print(f"Hello {s}")
+@innate()
+def hello_world():
+    """Print 'Hello World!' to the console."""
+    print("Hello world!")
 
 
-@innate("test_default")
-def test(s, mydefault="defaultval"):
-    print(f"Arg s={s}, mydefault={mydefault}")
+@innate("helloworld")
+def helloworld():
+    """Print 'Hello World!' to the console with a defined name."""
+    print("Hello world!")
 
 
-@innate("test_annotation")
-def typed_args(s: str, myint: int = 11):
-    print(f"Arg s={s}, myint={myint}")
+@innate()
+def add(x: int, y: int):
+    """
+    Enter two values to add. Must be integers.
+
+    myapp add 1 2
+    """
+    print(f"{x} + {y} = {x + y}")
+
+
+@innate()
+def add_x_or_100(x: int, y: int = 100):
+    """
+    Enter two values to add or a single value to add 100. Must be integers.
+
+    myapp add_x_or_100 1
+    myapp add_x_or_100 1 --y 1
+    """
+    print(f"{x} + {y} = {x + y}")
 ```
 
 ```
-(venv) [erm@odin myapp]$ myapp
-usage: myapp [-h] {mycommand,print_string,test_default,test_annotation} ...
+usage: myapp [-h] {hello_world,helloworld,hello,add,add_x_or_100} ...
 
-Innate CLI
+MyApp CLI
 
 positional arguments:
-  {mycommand,print_string,test_default,test_annotation}
+  {hello_world,helloworld,hello,add,add_x_or_100}
+    hello_world         Print 'Hello World!' to the console.
+    helloworld          Print 'Hello World!' to the console with a defined
+                        name.
+    hello               Print Hello with a name argument. myapp hello you
+    add                 Enter two values to add. Must be integers. myapp add 1
+                        2
+    add_x_or_100        Enter two values to add or a single value to add 100.
+                        Must be integers. myapp add_x_or_100 1 myapp
+                        add_x_or_100 1 --y 1
 
 optional arguments:
   -h, --help            show this help message and exit
