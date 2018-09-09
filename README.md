@@ -1,6 +1,6 @@
 # innate
 
-Small library for implementing command-line interfaces in Python 3.6+ projects. Supports both sync and async functions.
+Small library for implementing command-line interfaces in Python 3.6+ projects.
 
 ## Installation
 
@@ -18,16 +18,6 @@ innate = Innate(description="MyApp CLI")
 def hello(name):
     """
     Print Hello with a name argument.
-
-    myapp hello you
-    """
-    print(f"Hello, {name}")
-
-
-@innate()
-async def helloasync(name):
-    """
-    Print Hello with a name argument in a coroutine.
 
     myapp hello you
     """

@@ -13,14 +13,14 @@ def hello(name):
     print(f"Hello, {name}")
 
 
-@innate()
-async def helloasync(name):
-    """
-    Print Hello with a name argument in a coroutine.
+# @innate()
+# async def helloasync(name):
+#     """
+#     Print Hello with a name argument in a coroutine.
 
-    myapp hello you
-    """
-    print(f"Hello, {name}")
+#     myapp hello you
+#     """
+#     print(f"Hello, {name}")
 
 
 @innate()
