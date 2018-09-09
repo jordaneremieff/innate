@@ -1,6 +1,8 @@
 import sys
 import argparse
 import typing
+import asyncio
+from functools import partial
 from inspect import signature, getdoc
 from innate.__version__ import __version__
 
@@ -37,11 +39,16 @@ class Innate:
 
         return decorator
 
-    def cli(self, args=None):
+    def cli(self, args=None) -> None:
         if len(sys.argv) == 1:
             self.parser.print_help()
             sys.exit()
         args = self.parser.parse_args()
         _args = vars(args)
         func = _args.pop("func")
-        func(**_args)
+        command = partial(func, **_args)
+        if asyncio.iscoroutinefunction(func):
+            loop = asyncio.get_event_loop()
+            loop.run_until_complete(command())
+        else:
+            command()
