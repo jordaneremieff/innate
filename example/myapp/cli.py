@@ -4,6 +4,16 @@ innate = Innate(description="MyApp CLI")
 
 
 @innate()
+async def helloasync(name):
+    """
+    Print Hello with a name argument in a coroutine.
+
+    myapp hello you
+    """
+    print(f"Hello, {name}")
+
+
+@innate()
 def hello(name):
     """
     Print Hello with a name argument.
@@ -11,16 +21,6 @@ def hello(name):
     myapp hello you
     """
     print(f"Hello, {name}")
-
-
-# @innate()
-# async def helloasync(name):
-#     """
-#     Print Hello with a name argument in a coroutine.
-
-#     myapp hello you
-#     """
-#     print(f"Hello, {name}")
 
 
 @innate()

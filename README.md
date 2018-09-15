@@ -1,6 +1,6 @@
 # innate
 
-Small library for implementing command-line interfaces in Python 3.6+ projects.
+Small library for implementing command-line interfaces in Python 3.6+ projects. Supports both async and sync functions.
 
 ## Installation
 
@@ -12,6 +12,16 @@ Small library for implementing command-line interfaces in Python 3.6+ projects.
 from innate import Innate
 
 innate = Innate(description="MyApp CLI")
+
+
+@innate()
+async def helloasync(name):
+    """
+    Print Hello with a name argument in a coroutine.
+
+    myapp hello you
+    """
+    print(f"Hello, {name}")
 
 
 @innate()
@@ -55,19 +65,23 @@ def add_x_or_100(x: int, y: int = 100):
     myapp add_x_or_100 1 --y 1
     """
     print(f"{x} + {y} = {x + y}")
+
 ```
 
 ```
-usage: myapp [-h] {hello_world,helloworld,hello,add,add_x_or_100} ...
+usage: myapp [-h]
+             {helloasync,hello,hello_world,helloworld,add,add_x_or_100} ...
 
 MyApp CLI
 
 positional arguments:
-  {hello_world,helloworld,hello,add,add_x_or_100}
+  {helloasync,hello,hello_world,helloworld,add,add_x_or_100}
+    helloasync          Print Hello with a name argument in a coroutine. myapp
+                        hello you
+    hello               Print Hello with a name argument. myapp hello you
     hello_world         Print 'Hello World!' to the console.
     helloworld          Print 'Hello World!' to the console with a defined
                         name.
-    hello               Print Hello with a name argument. myapp hello you
     add                 Enter two values to add. Must be integers. myapp add 1
                         2
     add_x_or_100        Enter two values to add or a single value to add 100.

@@ -2,9 +2,10 @@ import sys
 import argparse
 import typing
 import asyncio
-
+import concurrent.futures
 from functools import partial
 from inspect import signature, getdoc
+
 from innate.__version__ import __version__
 
 
@@ -40,14 +41,26 @@ class Innate:
 
         return decorator
 
-    def cli(self):
+    async def cli(self):
         if len(sys.argv) == 1:
             self.parser.print_help()
             sys.exit()
-        args = self.parser.parse_args()
-        _args = vars(args)
-        func = _args.pop("func")
-        command = partial(func, **_args)
-        if asyncio.iscoroutinefunction(func):
-            raise Exception("Async currently not supported")
-        command()
+
+        args = vars(self.parser.parse_args())
+        func = args.pop("func")
+        command = partial(func, **args)
+
+        if not asyncio.iscoroutinefunction(func):
+            executor = concurrent.futures.ThreadPoolExecutor(max_workers=3)
+            loop = asyncio.get_event_loop()
+            sync_command = partial(loop.run_in_executor, executor, command)
+            try:
+                loop.run_until_complete(asyncio.wait_for(sync_command(), None))
+            finally:
+                return
+
+        await command()
+
+    def main(self):
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(loop.create_task(self.cli()))
